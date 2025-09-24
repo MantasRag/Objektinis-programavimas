@@ -1,0 +1,54 @@
+// v.pradinė
+#include <iostream> // Leidžia naudoti cin ir cout
+#include <iomanip>  // Leidžia formatuoti išvestį
+#include <vector>   // Leidžia įvesti vektorius
+#include <string>   // Leidžia įvesti string tipo kintamuosius
+
+using std::cout;    // Išvedimas
+using std::cin;     // Įvedimas
+using std::endl;    // Nauja eilutė
+using std::string;  // String tipo kintamieji
+using std::vector;  // Vektoriai
+using std::setw;    // Išvedimo metu nurodo plotį
+using std::left;    // Lygiavimas į kairę
+using std::right;   // Lygiavimas į dešinę
+
+// Aprašomas nuosavas duomenų tipas
+struct Studentas {
+    string vard;
+    string pav;
+    vector<int> paz;
+    int egzas;
+    float rez;
+};
+
+Studentas ivesk();
+
+// Pagrindinė programos funkcija
+int main() {
+    vector<Studentas> Grupe;
+    int kiek;
+    cout<<"Kiek studentų yra grupėje? "; cin>>kiek;
+    for (int j=0; j<kiek; j++) {
+        cout<<"Įveskite "<<j+1<<" studentą:\n";
+        Grupe.push_back(ivesk());
+    }
+    for (auto temp: Grupe)
+        cout<<temp.vard<<" | "<<temp.pav<<" | "<<temp.rez<<endl;
+}
+
+Studentas ivesk() {
+    Studentas Laik;
+    int sum=0, n,  m;    
+    cout<<"Įveskite studento vardą: "; cin>>Laik.vard;
+    cout<<"Įveskite studento pavardę: "; cin>>Laik.pav;
+    cout<<"Kiek pažymių turi studentas? "; cin>>n;
+    for (int i=0; i<n; i++) {
+        cout<<"Įveskite "<<i+1<<" paz. iš "<<n<<" : "; cin>>m;
+        Laik.paz.push_back(m);
+        sum+=m;
+    }
+    cout<<"Įveskite egzamino rezultatą: "; cin>>Laik.egzas;
+    Laik.rez = Laik.egzas*0.6+double(sum)/double(Laik.paz.size())*0.4;
+    return Laik;
+}
