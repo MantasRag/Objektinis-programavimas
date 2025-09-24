@@ -44,8 +44,10 @@ int main() {
         cout<<"Įveskite "<<j+1<<" studentą:\n";
         Grupe.push_back(ivesk());
     }
+    cout << left << setw(15) << "Vardas" << "| " << setw(15) << "Pavardė" << " | " << setw(20) << "Galutinis įvertinimas" << endl;
+    cout << std::string(55, '-') << endl; // atskyrimo linija
     for (auto temp: Grupe)
-        cout<<temp.vard<<" | "<<temp.pav<<" | "<<temp.rez<<endl;
+        cout<< left << setw(15)<<temp.vard<<"| "<<setw(15)<<temp.pav<<"|"<<right<<setw(20)<<temp.rez<<endl;
 }
 
 Studentas ivesk() {
