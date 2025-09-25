@@ -7,6 +7,8 @@
 #include <algorithm>        // Leidžia naudoti sort funkciją
 #include <fstream>          // Reikalinga darbui su failais
 #include <sstream>          // Reikalinga string srautams
+#include <random>           // Reikalinga atsitiktinių skaičių generavimui
+#include <ctime>            // Reikalinga atsitiktinių skaičių generavimui
 
 using std::cout;            // Išvedimas
 using std::cin;             // Įvedimas
@@ -23,6 +25,10 @@ using std::istringstream;   // String stream
 using std::ifstream;        // Failų įvedimas
 using std::getline;         // Leidžia skaityti eilutes iš failo
 using std::istringstream;   // Leidžia konvertuoti string į kitus tipus
+using std::random_device;   // Atsitiktinių skaičių generatoriaus įvesta
+using std::mt19937;         // Mersenne Twister atsitiktinių skaičių generatorius
+using std::uniform_int_distribution;    // Atsitiktinių int skaičių paskirstymas
+using std::to_string;       // Konvertuoja skaičių į string
 
 
 // Aprašomas nuosavas duomenų tipas
@@ -64,7 +70,7 @@ int main() {
                     generuoti_atsitiktinius(Grupe);
                     break;
                 case 4:
-                    cout << "Programa baigiama. Iki pasimatymo!\n";
+                    cout << "Programa baigta.\n";
                     return 0;
                 default:
                     cout << "Klaida: pasirinkite skaičių nuo 1 iki 4!\n\n";
@@ -86,11 +92,10 @@ int main() {
             }
         } else {
             cout << "Klaida: įveskite teisingą skaičių!\n\n";
-            cin.clear(); // nuimam failbit
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // išvalom blogą įvestį
+            cin.clear();                                                    // Nuima failbit
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Išvalo blogą įvestį
         }
     }
-    
     return 0;
 }
 
@@ -111,14 +116,13 @@ void ivesti_rankiniu_budu(vector<Studentas>& Grupe) {
     while (true) {
         cout << "\nKiek studentų yra grupėje? ";
         if (cin >> kiek && kiek > 0) {
-            break; // teisingas įvedimas
+            break;                                                          // Teisingas įvedimas
         } else {
             cout << "Klaida: studentų skaičius turi būti teigiamas skaičius! Įvesti dar kartą.\n";
-            cin.clear(); // nuimam failbit
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // išvalom blogą įvestį
+            cin.clear();                                                    // Nuima failbit
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Išvalo blogą įvestį
         }
     }
-    
     for (int j = 0; j < kiek; j++) {
         cout << "Įveskite " << j + 1 << " studentą:\n";
         Grupe.push_back(ivesk());
@@ -126,26 +130,22 @@ void ivesti_rankiniu_budu(vector<Studentas>& Grupe) {
 }
 
 void ivesti_is_failo(vector<Studentas>& Grupe) {
-    ifstream fin("kursiokai.txt");
+    ifstream fin("studentai10000.txt");
     if (!fin) {
         cout << "Klaida: nepavyko atidaryti failo 'kursiokai.txt'!\n";
         return;
     }
-
     string eilute;
     bool antraste = true;
-
     while (getline(fin, eilute)) {
         if (eilute.empty()) continue;       // Praleidžiamos tuščios .txt failo eilutės
         if (antraste) {                     // Praleidžiama antraštės eilutė
             antraste = false;
             continue;
         }
-
         istringstream iss(eilute);
         Studentas st;
         int pazymys, sum = 0;
-
         iss >> st.vard >> st.pav;
         st.paz.clear();
 
@@ -156,7 +156,7 @@ void ivesti_is_failo(vector<Studentas>& Grupe) {
         st.egzas = st.paz.back();           // Paskutinis eilutės skaičius yra egzamino pažymys
         st.paz.pop_back();
 
-        // suskaičiuojam sumą
+        // suskaičiuojama suma
         for (int nd : st.paz) sum += nd;    // Suskaičiuojama pažymių suma
         float mediana = sk_mediana(st.paz); // Apskaičiuojama mediana
         st.rez_vid = st.egzas * 0.6 + double(sum) / double(st.paz.size()) * 0.4; // Apskaičiuojamas galutinis (vidurkis)
@@ -164,14 +164,66 @@ void ivesti_is_failo(vector<Studentas>& Grupe) {
 
         Grupe.push_back(st);
     }
-
     cout << "Failas nuskaitytas sėkmingai. Įkelta " << Grupe.size() << " studentų.\n";
 }
 
 void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
-
-    cin.ignore();
-    cin.get();
+    int stud_skaicius, nd_skaicius;
+    
+    // Atsitiktinių skaičių generatoriaus nustatymas
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> pazymys_dis(1, 10);   // Pažymių diapazonas nuo 1 iki 10
+    
+    // Studentų skaičiaus įvedimas
+    while (true) {
+        cout << "\nKiek studentų generuoti? ";
+        if (cin >> stud_skaicius && stud_skaicius > 0) {
+            break;
+        } else {
+            cout << "Klaida: studentų skaičius turi būti teigiamas skaičius! Įveskite dar kartą.\n";
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+    
+    // Namų darbų skaičiaus įvedimas
+    while (true) {
+        cout << "Kiek namų darbų pažymių generuoti kiekvienam studentui? ";
+        if (cin >> nd_skaicius && nd_skaicius > 0) {
+            break;
+        } else {
+            cout << "Klaida: namų darbų skaičius turi būti teigiamas skaičius! Įveskite dar kartą.\n";
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+    
+    // Studentų duomenų generavimas
+    for (int i = 0; i < stud_skaicius; i++) {
+        Studentas st;
+        st.vard = "Vardas" + std::to_string(i + 1);
+        st.pav = "Pavarde" + std::to_string(i + 1);
+        
+        // Namų darbų pažymių generavimas
+        int sum = 0;
+        st.paz.clear();
+        for (int j = 0; j < nd_skaicius; j++) {
+            int pazymys = pazymys_dis(gen);
+            st.paz.push_back(pazymys);
+            sum += pazymys;
+        }
+        
+        st.egzas = pazymys_dis(gen);    // Egzamino pažymio generavimas
+        
+        // Galutinių rezultatų skaičiavimas
+        float mediana = sk_mediana(st.paz);
+        st.rez_vid = st.egzas * 0.6 + double(sum) / double(st.paz.size()) * 0.4;
+        st.rez_med = st.egzas * 0.6 + mediana * 0.4;
+        
+        Grupe.push_back(st);
+    }
+    cout << "Sukurta studentų: " << stud_skaicius << endl;
 }
 
 void spausdinti_rezultatus(const vector<Studentas>& Grupe) {
@@ -224,7 +276,7 @@ Studentas ivesk() {
         istringstream iss(line);
         int pazymys;
         
-        if (iss >> pazymys && iss.eof()) { // patikriname ar visas string'as buvo skaičius
+        if (iss >> pazymys && iss.eof()) {              // Patikriname ar visas string'as buvo skaičius
             if (pazymys >= 1 && pazymys <= 10) {
                 Laik.paz.push_back(pazymys);
                 sum += pazymys;
