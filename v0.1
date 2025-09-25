@@ -1,4 +1,4 @@
-// v.pradinė
+// v0.1
 #include <iostream>         // Leidžia naudoti cin ir cout
 #include <iomanip>          // Leidžia formatuoti išvestį
 #include <vector>           // Leidžia įvesti vektorius
@@ -137,15 +137,20 @@ void ivesti_is_failo(vector<Studentas>& Grupe) {
     }
 
     string eilute;
-    int eiluciu_sk = 0;
+    bool antraste = true;
     while (getline(fin, eilute)) {
         if (eilute.empty()) continue;
-        eiluciu_sk++;
+        if (antraste) { antraste = false; continue; }
+
+        istringstream iss(eilute);
+        Studentas st;
+        iss >> st.vard >> st.pav;
+
+        Grupe.push_back(st);
     }
 
-    cout << "Failas nuskaitytas sėkmingai. Rasta " << eiluciu_sk << " eilučių.\n";
+    cout << "Failas nuskaitytas sėkmingai. Įkelta " << Grupe.size() << " studentų.\n";
 }
-
 
 void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
     int stud_skaicius, nd_skaicius;
