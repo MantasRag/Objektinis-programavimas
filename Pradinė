@@ -5,7 +5,8 @@
 #include <string>           // Leidžia įvesti string tipo kintamuosius
 #include <limits>           // Naudojama valyti įvesties srautą
 #include <algorithm>        // Leidžia naudoti sort funkciją
-#include <sstream>          // String stream'ams
+#include <fstream>          // Reikalinga darbui su failais
+#include <sstream>          // Reikalinga string srautams
 
 using std::cout;            // Išvedimas
 using std::cin;             // Įvedimas
@@ -19,6 +20,10 @@ using std::fixed;           // Fiksuotas kablelis
 using std::setprecision;    // Nustato skaičių po kablelio skaičių
 using std::sort;            // Rūšiavimas
 using std::istringstream;   // String stream
+using std::ifstream;        // Failų įvedimas
+using std::getline;         // Leidžia skaityti eilutes iš failo
+using std::istringstream;   // Leidžia konvertuoti string į kitus tipus
+
 
 // Aprašomas nuosavas duomenų tipas
 struct Studentas {
@@ -121,9 +126,46 @@ void ivesti_rankiniu_budu(vector<Studentas>& Grupe) {
 }
 
 void ivesti_is_failo(vector<Studentas>& Grupe) {
+    ifstream fin("kursiokai.txt");
+    if (!fin) {
+        cout << "Klaida: nepavyko atidaryti failo 'kursiokai.txt'!\n";
+        return;
+    }
 
-    cin.ignore();
-    cin.get();
+    string eilute;
+    bool antraste = true;
+
+    while (getline(fin, eilute)) {
+        if (eilute.empty()) continue;       // Praleidžiamos tuščios .txt failo eilutės
+        if (antraste) {                     // Praleidžiama antraštės eilutė
+            antraste = false;
+            continue;
+        }
+
+        istringstream iss(eilute);
+        Studentas st;
+        int pazymys, sum = 0;
+
+        iss >> st.vard >> st.pav;
+        st.paz.clear();
+
+        while (iss >> pazymys) {            // Skaitomi visi ND pažymiai iki paskutinio eilutės skaičiaus
+            st.paz.push_back(pazymys);
+        }
+
+        st.egzas = st.paz.back();           // Paskutinis eilutės skaičius yra egzamino pažymys
+        st.paz.pop_back();
+
+        // suskaičiuojam sumą
+        for (int nd : st.paz) sum += nd;    // Suskaičiuojama pažymių suma
+        float mediana = sk_mediana(st.paz); // Apskaičiuojama mediana
+        st.rez_vid = st.egzas * 0.6 + double(sum) / double(st.paz.size()) * 0.4; // Apskaičiuojamas galutinis (vidurkis)
+        st.rez_med = st.egzas * 0.6 + mediana * 0.4; // Apskaičiuojamas galutinis (mediana)
+
+        Grupe.push_back(st);
+    }
+
+    cout << "Failas nuskaitytas sėkmingai. Įkelta " << Grupe.size() << " studentų.\n";
 }
 
 void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
