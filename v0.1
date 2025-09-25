@@ -228,21 +228,28 @@ void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
 }
 
 void spausdinti_rezultatus(const vector<Studentas>& Grupe) {
+    // Rikiuojame pagal vardą
+    vector<Studentas> temp = Grupe; // kad galėtume rikiuoti, nes Grupe yra const
+    sort(temp.begin(), temp.end(), [](const Studentas &a, const Studentas &b) {
+        return a.vard < b.vard;
+    });
+
     cout << "           STUDENTŲ REZULTATAI          \n";
     cout << left << setw(15) << "Vardas"
          << "| " << setw(15) << "Pavardė"
          << "| " << right << setw(15) << "Galutinis (vid.)"
          << " | " << setw(15) << "Galutinis (med.)"
          << endl;
-    cout << std::string(65, '-') << endl; // atskyrimo linija
+    cout << std::string(70, '-') << endl; // atskyrimo linija
     
-    for (auto temp : Grupe)
-        cout << left << setw(15) << temp.vard
-             << "| " << setw(15) << temp.pav
-             << "| " << right << setw(15) << fixed << setprecision(2) << temp.rez_vid
-             << " | " << setw(15) << fixed << setprecision(2) << temp.rez_med
+    for (auto temp_st : temp)
+        cout << left << setw(15) << temp_st.vard
+             << "| " << setw(15) << temp_st.pav
+             << "| " << right << setw(15) << fixed << setprecision(2) << temp_st.rez_vid
+             << "  | " << setw(15) << fixed << setprecision(2) << temp_st.rez_med
              << endl;
 }
+
 
 Studentas ivesk() {
     Studentas Laik;
