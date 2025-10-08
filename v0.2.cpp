@@ -49,6 +49,7 @@ void generuoti_atsitiktinius(vector<Studentas>& Grupe);
 void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metodas);
 void generuoti_i_txt();
 int pasirinkti_skaiciavimo_metoda();
+void arTestiDarba();
 
 // Pagrindinė programos funkcija
 int main() {
@@ -58,42 +59,39 @@ int main() {
     
     while (true) {
         rodyti_menu();
-        
         cout << "Pasirinkite veiksmą (1-5): ";
         if (cin >> pasirinkimas) {
             switch (pasirinkimas) {
                 case 1:
                     ivesti_rankiniu_budu(Grupe);
+                    if (!Grupe.empty()) {
+                        spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
+                        arTestiDarba();
+                    }
                     break;
                 case 2:
                     ivesti_is_failo(Grupe);
+                    if (!Grupe.empty()) {
+                        spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
+                        arTestiDarba();
+                    }
                     break;
                 case 3:
                     generuoti_atsitiktinius(Grupe);
+                    if (!Grupe.empty()) {
+                        spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
+                        arTestiDarba();
+                    }
                     break;
                 case 4:
                     generuoti_i_txt();
-                    continue;                                                   // Grįžtame į meniu pradžią
+                    break;
                 case 5:
                     cout << "Programa baigta.\n";
                     return 0;
                 default:
                     cout << "Klaida: pasirinkite skaičių nuo 1 iki 5!\n\n";
                     break;
-            }
-            
-            // Jei yra studentų duomenų, parodome rezultatus
-            if (!Grupe.empty()) {
-                spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
-                
-                char testi;
-                cout << "\nAr norite tęsti darbą su programa? (t/n): ";
-                cin >> testi;
-                if (testi == 'n' || testi == 'N') {
-                    cout << "Programa baigiama.\n";
-                    break;
-                }
-                cout << "\n";
             }
         } else {
             cout << "Klaida: įveskite teisingą skaičių!\n\n";
@@ -104,9 +102,19 @@ int main() {
     return 0;
 }
 
+void arTestiDarba() {
+    char testi;
+    cout << "\nAr norite tęsti darbą su programa? (t/n): ";
+    cin >> testi;
+    if (testi == 'n' || testi == 'N') {
+        cout << "Programa baigiama.\n";
+        exit(0);
+    }
+    cout << "\n";
+}
+
 int pasirinkti_skaiciavimo_metoda() {
     int metodas;
-    
     cout << "========================================\n";
     cout << "Pasirinkite galutinio pažymio skaičiavimo metodą:\n";
     cout << "1. Naudoti vidurkį\n";
@@ -120,7 +128,7 @@ int pasirinkti_skaiciavimo_metoda() {
             cout << "\n";
             return metodas;
         } else {
-            cout << "Klaida: pasirinkite skaičių nuo 1 iki 3!\n";
+            cout << "Klaida: pasirinkite skaičių nuo 1 iki 3\n";
             cin.clear();                                                    // Nuima failbit
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Išvalo blogą įvestį
         }
@@ -159,42 +167,74 @@ void ivesti_rankiniu_budu(vector<Studentas>& Grupe) {
 }
 
 void ivesti_is_failo(vector<Studentas>& Grupe) {
-    ifstream fin("studentai10000.txt");
-    if (!fin) {
-        cout << "Klaida: nepavyko atidaryti failo 'studentai10000.txt'!\n";
+    string failo_vardas = "stud1000.txt";       // Failo pavadinimas
+    std::ifstream fin(failo_vardas);
+    if (!fin.is_open()) {
+        cout << "Nepavyko atidaryti failo " << failo_vardas << "\n";
         return;
     }
 
     string eilute;
-    bool antraste = true;
-    while (getline(fin, eilute)) {
-        if (eilute.empty()) continue;
-        if (antraste) { antraste = false; continue; }
+    Grupe.clear();
+    Grupe.reserve(1000000);                     // Iš anksto rezervuoja vietą (spartesniam nuskaitymui)
 
-        istringstream iss(eilute);
+    bool pirma_eilute = true;
+    int kiek_stud = 0;
+
+    while (std::getline(fin, eilute)) {
+        if (pirma_eilute) { pirma_eilute = false; continue; }
+        if (eilute.empty()) continue;
+
         Studentas st;
-        int pazymys, sum = 0;
-        iss >> st.vard >> st.pav;
         st.paz.clear();
 
-        while (iss >> pazymys) {
-            st.paz.push_back(pazymys);
-        }
+        const char* p = eilute.c_str();
+        // Vardas
+        while (*p == ' ') ++p;
+        const char* q = p;
+        while (*q && *q != ' ') ++q;
+        st.vard.assign(p, q - p);
 
-        if (!st.paz.empty()) {
-            st.egzas = st.paz.back();
-            st.paz.pop_back();
-        }
-    
-        for (int nd : st.paz) sum += nd;
-        float mediana = sk_mediana(st.paz);
-        st.rez_vid = st.egzas * 0.6 + double(sum) / double(st.paz.size()) * 0.4;
-        st.rez_med = st.egzas * 0.6 + mediana * 0.4;
+        // Pavardė
+        p = q;
+        while (*p == ' ') ++p;
+        q = p;
+        while (*q && *q != ' ') ++q;
+        st.pav.assign(p, q - p);
 
-        Grupe.push_back(st);
+        // Pažymiai
+        p = q;
+        int val = 0;
+        bool skaitomas = false;
+        vector<int> paz;
+
+        for (; *p; ++p) {
+            if (*p >= '0' && *p <= '9') {
+                val = val * 10 + (*p - '0');
+                skaitomas = true;
+            } else if (skaitomas) {
+                paz.push_back(val);
+                val = 0;
+                skaitomas = false;
+            }
+        }
+        if (skaitomas) paz.push_back(val);
+
+        if (paz.empty()) continue;
+
+        st.egzas = paz.back();
+        paz.pop_back();
+        st.paz = std::move(paz);
+
+        st.rez_vid = 0.0f;
+        st.rez_med = 0.0f;
+
+        Grupe.push_back(std::move(st));
+        ++kiek_stud;
     }
 
-    cout << "Failas nuskaitytas sėkmingai. Įkelta " << Grupe.size() << " studentų.\n";
+    fin.close();
+    cout << "Failas nuskaitytas. Įkelta " << kiek_stud << " studentų.\n";
 }
 
 void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
@@ -318,56 +358,76 @@ void generuoti_i_txt() {
 }
 
 void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metodas) {
-    // Rikiuojame pagal vardą
-    vector<Studentas> temp = Grupe; // kad galėtume rikiuoti, nes Grupe yra const
+    // Kopijuojame studentus, kad galėtume rikiuoti
+    vector<Studentas> temp = Grupe; 
     sort(temp.begin(), temp.end(), [](const Studentas &a, const Studentas &b) {
         return a.vard < b.vard;
     });
 
     cout << "           STUDENTŲ REZULTATAI          \n";
-    
+
+    // Prieš spausdinimą apskaičiuojame tik reikalingus rezultatus
+    if (skaiciavimo_metodas == 1 || skaiciavimo_metodas == 3) {
+        // Vidurkis
+        for (auto &st : temp) {
+            if (st.rez_vid == 0.0f && !st.paz.empty()) {
+                int sum = 0;
+                for (int nd : st.paz) sum += nd;
+                st.rez_vid = st.egzas * 0.6f + float(sum) / st.paz.size() * 0.4f;
+            }
+        }
+    }
+
+    if (skaiciavimo_metodas == 2 || skaiciavimo_metodas == 3) {
+        // Mediana
+        for (auto &st : temp) {
+            if (st.rez_med == 0.0f && !st.paz.empty()) {
+                float mediana = sk_mediana(st.paz);
+                st.rez_med = st.egzas * 0.6f + mediana * 0.4f;
+            }
+        }
+    }
+
+    // Spausdinimas
     if (skaiciavimo_metodas == 1) {
-        // Tik vidurkis
         cout << left << setw(15) << "Vardas"
              << "| " << setw(15) << "Pavardė"
              << "| " << right << setw(15) << "Galutinis (vid.)"
              << endl;
-        cout << std::string(50, '-') << endl; // atskyrimo linija
-        
-        for (auto temp_st : temp)
-            cout << left << setw(15) << temp_st.vard
-                 << "| " << setw(15) << temp_st.pav
-                 << "| " << right << setw(15) << fixed << setprecision(2) << temp_st.rez_vid
+        cout << std::string(50, '-') << endl;
+
+        for (auto &st : temp)
+            cout << left << setw(15) << st.vard
+                 << "| " << setw(15) << st.pav
+                 << "| " << right << setw(15) << fixed << setprecision(2) << st.rez_vid
                  << endl;
     }
     else if (skaiciavimo_metodas == 2) {
-        // Tik mediana
         cout << left << setw(15) << "Vardas"
              << "| " << setw(15) << "Pavardė"
              << "| " << right << setw(15) << "Galutinis (med.)"
              << endl;
-        cout << std::string(50, '-') << endl; // atskyrimo linija
-        
-        for (auto temp_st : temp)
-            cout << left << setw(15) << temp_st.vard
-                 << "| " << setw(15) << temp_st.pav
-                 << "| " << right << setw(15) << fixed << setprecision(2) << temp_st.rez_med
+        cout << std::string(50, '-') << endl;
+
+        for (auto &st : temp)
+            cout << left << setw(15) << st.vard
+                 << "| " << setw(15) << st.pav
+                 << "| " << right << setw(15) << fixed << setprecision(2) << st.rez_med
                  << endl;
     }
     else if (skaiciavimo_metodas == 3) {
-        // Abu - vidurkis ir mediana
         cout << left << setw(15) << "Vardas"
              << "| " << setw(15) << "Pavardė"
              << "| " << right << setw(15) << "Galutinis (vid.)"
              << " | " << setw(15) << "Galutinis (med.)"
              << endl;
-        cout << std::string(70, '-') << endl; // atskyrimo linija
-        
-        for (auto temp_st : temp)
-            cout << left << setw(15) << temp_st.vard
-                 << "| " << setw(15) << temp_st.pav
-                 << "| " << right << setw(15) << fixed << setprecision(2) << temp_st.rez_vid
-                 << "  | " << setw(15) << fixed << setprecision(2) << temp_st.rez_med
+        cout << std::string(70, '-') << endl;
+
+        for (auto &st : temp)
+            cout << left << setw(15) << st.vard
+                 << "| " << setw(15) << st.pav
+                 << "| " << right << setw(15) << fixed << setprecision(2) << st.rez_vid
+                 << "  | " << setw(15) << fixed << setprecision(2) << st.rez_med
                  << endl;
     }
 }
