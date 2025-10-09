@@ -54,6 +54,7 @@ void padalinti_i_grupes(const vector<Studentas>& Grupe, int skaiciavimo_metodas,
 void generuoti_i_txt();
 int pasirinkti_skaiciavimo_metoda();
 void arTestiDarba();
+void issaugoti_i_txt(const vector<Studentas>& Grupe, const string& txt_pavadinimas, int skaiciavimo_metodas);
 
 int main() {                                                        // Pagrindinė programos funkcija
     vector<Studentas> Grupe;
@@ -83,6 +84,8 @@ int main() {                                                        // Pagrindin
                         padalinti_i_grupes(Grupe, skaiciavimo_metodas, maziau5, daugiaulygu5);
                         spausdinti_rezultatus(maziau5, skaiciavimo_metodas);
                         spausdinti_rezultatus(daugiaulygu5, skaiciavimo_metodas);
+                        issaugoti_i_txt(maziau5, "Maziau_5", skaiciavimo_metodas);
+                        issaugoti_i_txt(daugiaulygu5, "Daugiau_lygų_5", skaiciavimo_metodas);
                         arTestiDarba();
                     }
                     break;
@@ -532,19 +535,66 @@ void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metod
     }
 }
 
+void issaugoti_i_txt(const vector<Studentas>& Grupe, const string& txt_pavadinimas, int skaiciavimo_metodas) {
+    if (Grupe.empty()) {
+        cout << "Klaida. Studentų vektorius yra tuščias.\n";
+        return;
+    }
+
+    string failo_vardas = txt_pavadinimas + ".txt";
+    ofstream fout(failo_vardas);
+
+    if (!fout) {
+        cout << "Klaida. Nesukurtas failas '" << failo_vardas << "'\n";
+        return;
+    }
+
+    if (skaiciavimo_metodas==1) {
+        fout << left << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (vid.)" << "\n";
+
+        for (const auto& st : Grupe) {
+            fout << left << setw(15) << st.vard
+                 << setw(15) << st.pav
+                 << setw(20) << fixed << setprecision(2) << st.rez_vid
+                 << "\n";
+        }
+    } else if (skaiciavimo_metodas==2) {
+        fout << left << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (med.)" << "\n";
+
+        for (const auto& st : Grupe) {
+            fout << left << setw(15) << st.vard
+                 << setw(15) << st.pav
+                 << setw(20) << fixed << setprecision(2) << st.rez_med
+                 << "\n";
+        }
+    } else if (skaiciavimo_metodas==3) {
+        // Antraštė
+        fout << left << setw(15) << "Vardas" << setw(15) << "Pavarde"
+             << setw(20) << "Galutinis (vid.)" << setw(20) << "Galutinis (med.)" << "\n";
+
+        // Studentai
+        for (const auto& st : Grupe) {
+            fout << left << setw(15) << st.vard
+                 << setw(15) << st.pav
+                 << setw(20) << fixed << setprecision(2) << st.rez_vid
+                 << setw(20) << fixed << setprecision(2) << st.rez_med
+                 << "\n";
+        }
+    }
+
+    fout.close();
+    cout << "Duomenys įrašyti į failą '" << failo_vardas << "'\n";
+}
+
 Studentas ivesk() {
     Studentas Laik;
     int sum = 0;
-    
     cout<<"Įveskite studento vardą: "; 
     cin>>Laik.vard;
     cout<<"Įveskite studento pavardę: "; 
     cin>>Laik.pav;
-    
     cin.ignore(); // išvalome naują eilutės simbolį po pavardės įvedimo
-    
     cout << "Įveskite namų darbų pažymius (1-10). Norėdami baigti, spauskite ENTER tuščiai eilutei:\n";
-    
     string line;
     int pazymys_num = 1;
     
@@ -561,7 +611,6 @@ Studentas ivesk() {
             break;
         }
         
-        // Bandome konvertuoti eilutę į skaičių
         istringstream iss(line);
         int pazymys;
         
