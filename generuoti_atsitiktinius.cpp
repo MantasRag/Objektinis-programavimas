@@ -17,11 +17,11 @@ void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
     
     // Studentų skaičiaus įvedimas
     while (true) {
-        cout << "\nKiek studentų generuoti? ";
+        cout << "\nKiek studentu generuoti? ";
         if (cin >> stud_skaicius && stud_skaicius > 0) {
             break;
         } else {
-            cout << "Klaida: studentų skaičius turi būti teigiamas skaičius! Įveskite dar kartą.\n";
+            cout << "Klaida: studentu skaicius turi buti teigiamas skaičics. Iveskite dar karta.\n";
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
@@ -29,11 +29,11 @@ void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
     
     // Namų darbų skaičiaus įvedimas
     while (true) {
-        cout << "Kiek namų darbų pažymių generuoti kiekvienam studentui? ";
+        cout << "Kiek namu darbu pazymiu generuoti kiekvienam studentui? ";
         if (cin >> nd_skaicius && nd_skaicius > 0) {
             break;
         } else {
-            cout << "Klaida: namų darbų skaičius turi būti teigiamas skaičius! Įveskite dar kartą.\n";
+            cout << "Klaida: namu darbu skaicius turi buti teigiamas skaicius. Iveskite dar karta.\n";
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
@@ -57,5 +57,5 @@ void generuoti_atsitiktinius(vector<Studentas>& Grupe) {
         st.egzas = pazymys_dis(gen);    // Egzamino pažymio generavimas
         Grupe.push_back(st);
     }
-    cout << "Sukurta studentų: " << stud_skaicius << endl;
+    cout << "Sukurta studentu: " << stud_skaicius << endl;
 }

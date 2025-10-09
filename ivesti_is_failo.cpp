@@ -73,5 +73,5 @@ void ivesti_is_failo(vector<Studentas>& Grupe, const string& failo_vardas) {
     }
 
     fin.close();
-    cout << "Failas nuskaitytas. Įkelta " << kiek_stud << " studentų.\n";
+    cout << "Ikelta " << kiek_stud << " studentu.\n";
 }

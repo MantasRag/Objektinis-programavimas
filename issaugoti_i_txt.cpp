@@ -10,7 +10,7 @@ using namespace std;
 
 void issaugoti_i_txt(const std::vector<Studentas>& Grupe, const std::string& txt_pavadinimas, int skaiciavimo_metodas) {
     if (Grupe.empty()) {
-        cout << "Klaida. Studentų vektorius yra tuščias.\n";
+        cout << "Klaida. Studentu vektorius yra tuscias.\n";
         return;
     }
 
@@ -53,5 +53,5 @@ void issaugoti_i_txt(const std::vector<Studentas>& Grupe, const std::string& txt
     }
 
     fout.close();
-    cout << "Duomenys įrašyti į failą '" << failo_vardas << "'\n";
+    cout << "Duomenys irasyti i faila '" << failo_vardas << "'\n";
 }

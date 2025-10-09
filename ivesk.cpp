@@ -51,10 +51,10 @@ Studentas ivesk() {
     
     // Egzamino įvedimas
     do {
-        cout<<"Įveskite egzamino rezultatą (1-10): ";
+        cout<<"Iveskite egzamino rezultata (1-10): ";
         cin>>Laik.egzas;
         if (Laik.egzas < 1 || Laik.egzas > 10) {
-            cout<<"Klaida: egzamino įvertinimas turi būti nuo 1 iki 10! Įvertinimą įvesti dar kartą.\n";
+            cout<<"Klaida: egzamino ivertinimas turi būti nuo 1 iki 10. Ivertinima ivesti dar karta.\n";
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }

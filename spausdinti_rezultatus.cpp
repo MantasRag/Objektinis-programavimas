@@ -6,7 +6,7 @@ using namespace std;
 
 void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metodas) {
     const vector<Studentas>& temp = Grupe;
-    cout << "           STUDENTŲ REZULTATAI          \n";
+    cout << "           STUDENTU REZULTATAI          \n";
 
     if (skaiciavimo_metodas == 1) {
         cout << left << setw(15) << "Vardas"

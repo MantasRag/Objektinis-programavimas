@@ -10,17 +10,17 @@ void ivesti_rankiniu_budu(vector<Studentas>& Grupe) {
     
     // Tikriname studentų skaičiaus įvedimą
     while (true) {
-        cout << "\nKiek studentų yra grupėje? ";
+        cout << "\nKiek studentu yra grupeje? ";
         if (cin >> kiek && kiek > 0) {
             break;                                                          // Teisingas įvedimas
         } else {
-            cout << "Klaida: studentų skaičius turi būti teigiamas skaičius! Įvesti dar kartą.\n";
+            cout << "Klaida: studentu skaičius turi buti teigiamas skaicius. Ivesti dar karta.\n";
             cin.clear();                                                    // Nuima failbit
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Išvalo blogą įvestį
         }
     }
     for (int j = 0; j < kiek; j++) {
-        cout << "Įveskite " << j + 1 << " studentą:\n";
+        cout << "Iveskite " << j + 1 << " studenta:\n";
         Grupe.push_back(ivesk());
     }
 }

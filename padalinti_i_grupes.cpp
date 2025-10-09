@@ -1,27 +1,14 @@
-#include "padalinti_i_grupes.h"  // Studentų grupavimui
+#include "padalinti_i_grupes.h"  
 #include <vector>
-#include <limits>
 #include <iostream>
 
 using namespace std;
 
-void padalinti_i_grupes(const vector<Studentas>& Grupe, int skaiciavimo_metodas,
+void padalinti_i_grupes(const vector<Studentas>& Grupe, int tipas,
                         vector<Studentas>& maziau5, vector<Studentas>& daugiaulygu5) {
     if (Grupe.empty()) {
         cout << "Klaida. Studentų vektorius tuščias.\n";
         return;
-    }
-
-    int tipas = skaiciavimo_metodas;
-    if (skaiciavimo_metodas == 3) {
-        cout << "\nDalinti pagal:\n";
-        cout << "1. Galutinį (vidurkis)\n";
-        cout << "2. Galutinį (mediana)\n";
-        while (!(cin >> tipas) || (tipas != 1 && tipas != 2)) {
-            cout << "Klaida. Įveskite 1 arba 2\n";
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
     }
 
     maziau5.clear();
@@ -34,9 +21,8 @@ void padalinti_i_grupes(const vector<Studentas>& Grupe, int skaiciavimo_metodas,
         else
             daugiaulygu5.push_back(st);
     }
-
-    cout << "\nStudentai suskirstyti pagal galutinį pažymį (" 
+    cout << "\nStudentai suskirstyti i grupes pagal " 
          << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
-    cout << "Studentų su < 5: " << maziau5.size() << endl;
-    cout << "Studentų su ≥ 5: " << daugiaulygu5.size() << endl;
+    cout << "Studentu su < 5: " << maziau5.size() << endl;
+    cout << "Studentu su ≥ 5: " << daugiaulygu5.size() << endl;
 }

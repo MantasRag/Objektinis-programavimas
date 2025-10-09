@@ -5,7 +5,7 @@ using namespace std;
 
 void arTestiDarba() {
     char testi;
-    cout << "\nAr norite tęsti darbą su programa? (t/n): ";
+    cout << "\nAr norite testi darba su programa? (t/n): ";
     cin >> testi;
     if (testi == 'n' || testi == 'N') {
         cout << "Programa baigiama.\n";

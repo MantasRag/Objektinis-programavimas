@@ -2,4 +2,4 @@
 #include "studentas.h"  // Studentų duomenų struktūrai
 #include <vector>
 
-void rusiuoti_studentus(std::vector<Studentas>& Grupe, int skaiciavimo_metodas);
+void rusiuoti_studentus(std::vector<Studentas>& Grupe, int skaiciavimo_metodas, int tipas, int tvarka);
