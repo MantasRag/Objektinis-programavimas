@@ -47,15 +47,20 @@ void ivesti_rankiniu_budu(vector<Studentas>& Grupe);
 void ivesti_is_failo(vector<Studentas>& Grupe);
 void generuoti_atsitiktinius(vector<Studentas>& Grupe);
 void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metodas);
+void skaiciuoti_rezultatus(vector<Studentas>& Grupe, int skaiciavimo_metodas);
+void rusiuoti_studentus(vector<Studentas>& Grupe, int skaiciavimo_metodas);
+void padalinti_i_grupes(const vector<Studentas>& Grupe, int skaiciavimo_metodas,
+                        vector<Studentas>& maziau5, vector<Studentas>& daugiaulygu5);
 void generuoti_i_txt();
 int pasirinkti_skaiciavimo_metoda();
 void arTestiDarba();
 
-// Pagrindinė programos funkcija
-int main() {
+int main() {                                                        // Pagrindinė programos funkcija
     vector<Studentas> Grupe;
     int pasirinkimas;
     int skaiciavimo_metodas = pasirinkti_skaiciavimo_metoda();
+    vector<Studentas> maziau5;
+    vector<Studentas> daugiaulygu5;
     
     while (true) {
         rodyti_menu();
@@ -65,6 +70,7 @@ int main() {
                 case 1:
                     ivesti_rankiniu_budu(Grupe);
                     if (!Grupe.empty()) {
+                        skaiciuoti_rezultatus(Grupe, skaiciavimo_metodas);
                         spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
                         arTestiDarba();
                     }
@@ -72,13 +78,18 @@ int main() {
                 case 2:
                     ivesti_is_failo(Grupe);
                     if (!Grupe.empty()) {
-                        spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
+                        skaiciuoti_rezultatus(Grupe, skaiciavimo_metodas);
+                        rusiuoti_studentus(Grupe, skaiciavimo_metodas);
+                        padalinti_i_grupes(Grupe, skaiciavimo_metodas, maziau5, daugiaulygu5);
+                        spausdinti_rezultatus(maziau5, skaiciavimo_metodas);
+                        spausdinti_rezultatus(daugiaulygu5, skaiciavimo_metodas);
                         arTestiDarba();
                     }
                     break;
                 case 3:
                     generuoti_atsitiktinius(Grupe);
                     if (!Grupe.empty()) {
+                        skaiciuoti_rezultatus(Grupe, skaiciavimo_metodas);
                         spausdinti_rezultatus(Grupe, skaiciavimo_metodas);
                         arTestiDarba();
                     }
@@ -357,44 +368,133 @@ void generuoti_i_txt() {
     cout << "\nVisi failai sukurti.\n";
 }
 
-void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metodas) {
-    // Kopijuojame studentus, kad galėtume rikiuoti
-    vector<Studentas> temp = Grupe; 
-    sort(temp.begin(), temp.end(), [](const Studentas &a, const Studentas &b) {
-        return a.vard < b.vard;
-    });
-
-    cout << "           STUDENTŲ REZULTATAI          \n";
-
-    // Prieš spausdinimą apskaičiuojame tik reikalingus rezultatus
+void skaiciuoti_rezultatus(vector<Studentas>& Grupe, int skaiciavimo_metodas) {
     if (skaiciavimo_metodas == 1 || skaiciavimo_metodas == 3) {
         // Vidurkis
-        for (auto &st : temp) {
-            if (st.rez_vid == 0.0f && !st.paz.empty()) {
+        for (auto &st : Grupe) {
+            if (!st.paz.empty()) {
                 int sum = 0;
                 for (int nd : st.paz) sum += nd;
-                st.rez_vid = st.egzas * 0.6f + float(sum) / st.paz.size() * 0.4f;
+                st.rez_vid = st.egzas * 0.6f + (float(sum) / st.paz.size()) * 0.4f;
             }
         }
     }
-
     if (skaiciavimo_metodas == 2 || skaiciavimo_metodas == 3) {
         // Mediana
-        for (auto &st : temp) {
-            if (st.rez_med == 0.0f && !st.paz.empty()) {
+        for (auto &st : Grupe) {
+            if (!st.paz.empty()) {
                 float mediana = sk_mediana(st.paz);
                 st.rez_med = st.egzas * 0.6f + mediana * 0.4f;
             }
         }
     }
+}
 
-    // Spausdinimas
+void rusiuoti_studentus(vector<Studentas>& Grupe, int skaiciavimo_metodas) {
+    if (Grupe.empty()) {
+        cout << "Klaida. Studentų vektorius tuščias.\n";
+        return;
+    }
+    cout << "\nPasirinkite rikiavimo tvarką (įvesti 1 arba 2):\n";
+    cout << "1. Didėjančia tvarka (nuo mažiausio iki didžiausio)\n";
+    cout << "2. Mažėjančia tvarka (nuo didžiausio iki mažiausio)\n";
+    
+    int tvarka;
+    while (!(cin >> tvarka) || (tvarka != 1 && tvarka != 2)) {
+        cout << "Klaida. Įveskite 1 arba 2\n";
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    // Rikiavimas
+    if (skaiciavimo_metodas == 1) {
+        // Pagal vidurkį
+        if (tvarka == 1)
+            sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_vid < b.rez_vid; });
+        else
+            sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_vid > b.rez_vid; });
+    } 
+    else if (skaiciavimo_metodas == 2) {
+        // Pagal medianą
+        if (tvarka == 1)
+            sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_med < b.rez_med; });
+        else
+            sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_med > b.rez_med; });
+    } 
+    else if (skaiciavimo_metodas == 3) { // Jei skaičiavimo metodas yra 3, tai vartotojas turi pasirinkti pagal ką rikiuoti (vidurkį ar medianą)
+        int tipas;
+        cout << "\nRikiuoti pagal:\n";
+        cout << "1. Galutinį (vidurkis)\n";
+        cout << "2. Galutinį (mediana)\n";
+        cout << "Pasirinkimas: ";
+        while (!(cin >> tipas) || (tipas != 1 && tipas != 2)) {
+            cout << "Klaida. Įveskite 1 arba 2\n";
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << "Pasirinkimas: ";
+        }
+
+        if (tipas == 1) {
+            if (tvarka == 1)
+                sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_vid < b.rez_vid; });
+            else
+                sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_vid > b.rez_vid; });
+        } else {
+            if (tvarka == 1)
+                sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_med < b.rez_med; });
+            else
+                sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) { return a.rez_med > b.rez_med; });
+        }
+    }
+    cout << "Studentai sėkmingai surikiuoti.\n\n";
+}
+
+void padalinti_i_grupes(const vector<Studentas>& Grupe, int skaiciavimo_metodas,
+                        vector<Studentas>& maziau5, vector<Studentas>& daugiaulygu5) {
+    if (Grupe.empty()) {
+        cout << "Klaida. Studentų vektorius tuščias.\n";
+        return;
+    }
+
+    int tipas = skaiciavimo_metodas;
+    if (skaiciavimo_metodas == 3) {
+        cout << "\nDalinti pagal:\n";
+        cout << "1. Galutinį (vidurkis)\n";
+        cout << "2. Galutinį (mediana)\n";
+        while (!(cin >> tipas) || (tipas != 1 && tipas != 2)) {
+            cout << "Klaida. Įveskite 1 arba 2\n";
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+
+    maziau5.clear();
+    daugiaulygu5.clear();
+
+    for (const auto& st : Grupe) {
+        float rezultatas = (tipas == 1 ? st.rez_vid : st.rez_med);
+        if (rezultatas < 5.0f)
+            maziau5.push_back(st);
+        else
+            daugiaulygu5.push_back(st);
+    }
+
+    cout << "\nStudentai suskirstyti pagal galutinį pažymį (" 
+         << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
+    cout << "Studentų su < 5: " << maziau5.size() << endl;
+    cout << "Studentų su ≥ 5: " << daugiaulygu5.size() << endl;
+}
+
+void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metodas) {
+    const vector<Studentas>& temp = Grupe;
+    cout << "           STUDENTŲ REZULTATAI          \n";
+
     if (skaiciavimo_metodas == 1) {
         cout << left << setw(15) << "Vardas"
              << "| " << setw(15) << "Pavardė"
              << "| " << right << setw(15) << "Galutinis (vid.)"
              << endl;
-        cout << std::string(50, '-') << endl;
+        cout << string(50, '-') << endl;
 
         for (auto &st : temp)
             cout << left << setw(15) << st.vard
@@ -407,7 +507,7 @@ void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metod
              << "| " << setw(15) << "Pavardė"
              << "| " << right << setw(15) << "Galutinis (med.)"
              << endl;
-        cout << std::string(50, '-') << endl;
+        cout << string(50, '-') << endl;
 
         for (auto &st : temp)
             cout << left << setw(15) << st.vard
@@ -421,7 +521,7 @@ void spausdinti_rezultatus(const vector<Studentas>& Grupe, int skaiciavimo_metod
              << "| " << right << setw(15) << "Galutinis (vid.)"
              << " | " << setw(15) << "Galutinis (med.)"
              << endl;
-        cout << std::string(70, '-') << endl;
+        cout << string(70, '-') << endl;
 
         for (auto &st : temp)
             cout << left << setw(15) << st.vard
