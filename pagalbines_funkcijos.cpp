@@ -34,7 +34,7 @@ void rodyti_menu() {
     cout << "2. Ivesti studentu rezultatus is txt failo\n";
     cout << "3. Studentu rezultatus generuoti atsitiktinius\n";
     cout << "4. Generuoti testavimo failus (5 failai)\n";
-    cout << "5. v0.2 versijos pilna užduotis\n";
+    cout << "5. Testuoti konteinerius (vector ir list)\n";
     cout << "6. Iseiti is programos\n";
     cout << "========================================\n";
 }

@@ -71,16 +71,16 @@ Studentas ivesk() {
 
 int pasirinkti_konteinerio_tipa() {
     int tipas;
-    cout << "\nPasirinkite konteinerio tipą:\n";
+    cout << "\nKonteinerio tipas:\n";
     cout << "1. Vector\n";
     cout << "2. List\n";
-    cout << "Pasirinkimas: ";
+    cout << "Renkamasi: ";
     
     while (!(cin >> tipas) || (tipas != 1 && tipas != 2)) {
-        cout << "Klaida. Įveskite 1 arba 2\n";
+        cout << "Klaida. Ivesti 1 arba 2\n";
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Pasirinkimas: ";
+        cout << "Renkamasi: ";
     }
     return tipas;
 }

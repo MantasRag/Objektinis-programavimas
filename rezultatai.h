@@ -34,3 +34,62 @@ void skaiciuoti_rezultatus(Container& Grupe, int skaiciavimo_metodas) {
 }
 
 void spausdinti_rezultatus(const std::vector<Studentas>& Grupe, int skaiciavimo_metodas);
+
+// Nauja funkcija rankinio įvedimo rezultatams su atminties adresais
+template <typename Container>
+void spausdinti_rezultatus1(const Container& Grupe, int skaiciavimo_metodas) {
+    using namespace std;
+    
+    cout << "           STUDENTU REZULTATAI          \n";
+
+    if (skaiciavimo_metodas == 1) {
+        cout << left << setw(15) << "Vardas"
+             << "| " << setw(15) << "Pavarde"
+             << "| " << right << setw(18) << "Galutinis (vid.)"
+             << " | " << left << setw(20) << "Atminties adresas"
+             << endl;
+        cout << string(85, '-') << endl;
+
+        for (const auto &st : Grupe) {
+            cout << left << setw(15) << st.vard
+                 << "| " << setw(15) << st.pav
+                 << "| " << right << setw(18) << fixed << setprecision(2) << st.rez_vid
+                 << " | " << left << &st
+                 << endl;
+        }
+    }
+    else if (skaiciavimo_metodas == 2) {
+        cout << left << setw(15) << "Vardas"
+             << "| " << setw(15) << "Pavarde"
+             << "| " << right << setw(18) << "Galutinis (med.)"
+             << " | " << left << setw(20) << "Atminties adresas"
+             << endl;
+        cout << string(85, '-') << endl;
+
+        for (const auto &st : Grupe) {
+            cout << left << setw(15) << st.vard
+                 << "| " << setw(15) << st.pav
+                 << "| " << right << setw(18) << fixed << setprecision(2) << st.rez_med
+                 << " | " << left << &st
+                 << endl;
+        }
+    }
+    else if (skaiciavimo_metodas == 3) {
+        cout << left << setw(15) << "Vardas"
+             << "| " << setw(15) << "Pavarde"
+             << "| " << right << setw(18) << "Galutinis (vid.)"
+             << " | " << setw(18) << "Galutinis (med.)"
+             << " | " << left << setw(20) << "Atminties adresas"
+             << endl;
+        cout << string(105, '-') << endl;
+
+        for (const auto &st : Grupe) {
+            cout << left << setw(15) << st.vard
+                 << "| " << setw(15) << st.pav
+                 << "| " << right << setw(18) << fixed << setprecision(2) << st.rez_vid
+                 << "  | " << setw(18) << fixed << setprecision(2) << st.rez_med
+                 << " | " << left << &st
+                 << endl;
+        }
+    }
+}
