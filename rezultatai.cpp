@@ -1,4 +1,9 @@
 #include "rezultatai.h"
+#include "studentas.h"
+#include "pagalbines_funkcijos.h"
+#include <iostream>
+#include <iomanip>
+#include <vector>
 
 using namespace std;
 

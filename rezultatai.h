@@ -1,10 +1,13 @@
 #pragma once
 #include <vector>
+#include <list>
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include "studentas.h"
-#include "pagalbines_funkcijos.h"
+#include "studentas.h"              // Studentų duomenų struktūrai
+#include "pagalbines_funkcijos.h"   // Pagalbinėms funkcijoms
+
+using std::vector;
 
 template <typename Container>
 void skaiciuoti_rezultatus(Container& Grupe, int skaiciavimo_metodas) {
@@ -18,6 +21,7 @@ void skaiciuoti_rezultatus(Container& Grupe, int skaiciavimo_metodas) {
             }
         }
     }
+
     if (skaiciavimo_metodas == 2 || skaiciavimo_metodas == 3) {
         // Mediana
         for (auto &st : Grupe) {
