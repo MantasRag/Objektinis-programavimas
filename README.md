@@ -1,15 +1,19 @@
-<img width="753" height="97" alt="image" src="https://github.com/user-attachments/assets/3a6c25e7-da70-4bb4-94ae-b571ec7f9e8d" />Objektinis-programavimas
-Objektinio programavimo užduotys (programa).
+# v0.3
 
-v0.3
-**1. Testuota su nešiojamu kompiuteriu (laptop)**
-CPU: Intel(R) Core(TM) i5-10210U @ 1.60GHz
-RAM: 8 GB
-SSD: NVMe INTEL SSDPEKNW512G8
+## 1. Testuota su nešiojamu kompiuteriu (laptop)
 
-**2. Konteinerių testavimo rezultatai**
+**CPU:** Intel(R) Core(TM) i5-10210U @ 1.60GHz;
+
+**RAM:** 8 GB;
+
+**SSD:** NVMe INTEL SSDPEKNW512G8.
+
+## **2. Konteinerių testavimo rezultatai**
+
 **2.1. 1 000 įrašų**
+
 *2.1.1. Vektorius*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 0.005       | 0.000        | 0.002      | 0.001       | 0.002          | 0.003           | 0.013          |
@@ -17,6 +21,7 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 0.002       | 0.000        | 0.001      | 0.001       | 0.002          | 0.006           | 0.012          |
 
 *2.1.2. List*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 0.006       | 0.000        | 0.000      | 0.001       | 0.003          | 0.006           | 0.016          |
@@ -24,9 +29,22 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 0.004       | 0.001        | 0.000      | 0.001       | 0.001          | 0.006           | 0.013          |
 
 *2.1.3. Palyginimas*
+| Veiksmas           | Vektorius (s) | List (s)   | Greitesnis    |
+| ------------------ | ------------- | ---------- | ------------- |
+| Nuskaitymas        | 0.0033        | 0.0043     | Vektorius     |
+| Skaičiavimas       | 0.0000        | 0.0003     | Vektorius     |
+| Rikiavimas         | 0.0013        | 0.0000     | List          |
+| Padalinimas        | 0.0010        | 0.0010     | Vienodai      |
+| Išvedimas (<5)     | 0.0030        | 0.0027     | List          |
+| Išvedimas (≥5)     | 0.0040        | 0.0073     | Vektorius     |
+| **Bendras laikas** | **0.0127**    | **0.0157** | **Vektorius** |
+
+Atlikus vidurkių analizę, pastebėta, kad vektorius daugeliu atveju yra greitesnis. Jis vuditiniškai 19 % veikia greičiau nei list struktūra (0.0127 s ir 0.0157 s).
 
 **2.2. 10 000 įrašų**
+
 *2.2.1. Vektorius*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 0.024       | 0.006        | 0.023      | 0.008       | 0.010          | 0.013           | 0.084          |
@@ -34,6 +52,7 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 0.021       | 0.005        | 0.022      | 0.007       | 0.010          | 0.011           | 0.076          |
 
 *2.2.2. List*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 0.023       | 0.006        | 0.003      | 0.007       | 0.010          | 0.012           | 0.061          |
@@ -41,8 +60,22 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 0.035       | 0.005        | 0.003      | 0.012       | 0.011          | 0.015           | 0.081          |
 
 *2.2.3. Palyginimas*
+| Veiksmas           | Vektorius (s) | List (s)   | Greitesnis |
+| ------------------ | ------------- | ---------- | ---------- |
+| Nuskaitymas        | 0.0243        | 0.0267     | Vektorius  |
+| Skaičiavimas       | 0.0057        | 0.0057     | Vienodai   |
+| Rikiavimas         | 0.0227        | 0.0033     | List       |
+| Padalinimas        | 0.0080        | 0.0083     | Vektorius  |
+| Išvedimas (<5)     | 0.0097        | 0.0107     | Vektorius  |
+| Išvedimas (≥5)     | 0.0120        | 0.0137     | Vektorius  |
+| **Bendras laikas** | **0.0823**    | **0.0683** | **List**   |
+
+Analizuojant 10 000 įrašų pastbebėta, kad vektoriaus struktūra yra greitesnė daugelyje veiksmų, tačiau daug lėtesnė rikiavime nei list struktūra, o tai bendrame laike nusvėrė, kad greitesnė struktūra yra list. List apie 17 % greitesnė nei vector (0.0683 s ir 0.0823 s).
+
 **2.3. 100 000 įrašų**
+
 *2.3.1. Vektorius*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 0.197       | 0.055        | 0.273      | 0.053       | 0.070          | 0.093           | 0.741          |
@@ -50,6 +83,7 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 0.196       | 0.056        | 0.278      | 0.053       | 0.069          | 0.101           | 0.753          |
 
 *2.3.2. List*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 0.236       | 0.064        | 0.067      | 0.064       | 0.077          | 0.103           | 0.611          |
@@ -57,9 +91,22 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 0.212       | 0.064        | 0.067      | 0.060       | 0.073          | 0.133           | 0.609          |
 
 *2.3.3. Palyginimas*
+| Veiksmas           | Vektorius (s) | List (s)   | Greitesnis |
+| ------------------ | ------------- | ---------- | ---------- |
+| Nuskaitymas        | 0.1943        | 0.2193     | Vektorius  |
+| Skaičiavimas       | 0.0563        | 0.0643     | Vektorius  |
+| Rikiavimas         | 0.2740        | 0.0680     | List       |
+| Padalinimas        | 0.0517        | 0.0610     | Vektorius  |
+| Išvedimas (<5)     | 0.0700        | 0.0753     | Vektorius  |
+| Išvedimas (≥5)     | 0.1030        | 0.1143     | Vektorius  |
+| **Bendras laikas** | **0.7493**    | **0.6023** | **List**   |
+
+Apdorojant 100 000 įrašų, „list“ struktūra“ bendrai buvo apie 20 % greitesnė nei "vector" (0.6023 s ir 0.7493 s). Tai rodo, kad didėjant duomenų kiekiui, „list“ tampa efektyvesnis bendrame procese, daugiausia dėl geresnio rikiavimo našumo.
 
 **2.4. 1 000 000 įrašų**
+
 *2.4.1. Vektorius*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 1.780       | 0.531        | 3.589      | 0.567       | 0.743          | 0.858           | 8.068          |
@@ -67,6 +114,7 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 1.826       | 0.553        | 3.701      | 0.603       | 0.629          | 1.066           | 8.378          |
 
 *2.4.2. List*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 2.136       | 0.614        | 1.117      | 0.735       | 0.634          | 1.014           | 6.250          |
@@ -74,9 +122,23 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 2.176       | 0.686        | 1.054      | 0.604       | 0.824          | 0.976           | 6.320          |
 
 *2.4.3. Palyginimas*
+| Veiksmas           | Vektorius (s) | List (s)   | Greitesnis |
+| ------------------ | ------------- | ---------- | ---------- |
+| Nuskaitymas        | 1.8047        | 2.0993     | Vektorius  |
+| Skaičiavimas       | 0.5373        | 0.6447     | Vektorius  |
+| Rikiavimas         | 3.6760        | 1.0687     | List       |
+| Padalinimas        | 0.5863        | 0.6463     | Vektorius  |
+| Išvedimas (<5)     | 0.6657        | 0.7183     | Vektorius  |
+| Išvedimas (≥5)     | 0.9347        | 0.9807     | Vektorius  |
+| **Bendras laikas** | **8.2047**    | **6.1580** | **List**   |
+
+Apdorojant 1 000 000 įrašų, „list“ struktūra“ veikia apie 25 % greičiau nei „vector“ (6.158 s ir 8.205 s).
+Tai rodo, kad didėjant duomenų kiekiui, „list“ tampa vis efektyvesnis, daugiausia dėl žymiai greitesnio rikiavimo algoritmo veikimo.
 
 **2.5. 1 0000 000 įrašų**
+
 *2.5.1. Vektorius*
+
 |   | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | - | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1 | 28.066      | 5.424        | 44.473     | 7.230       | 7.104          | 10.875          | 103.172        |
@@ -84,6 +146,7 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3 | 23.532      | 5.059        | 53.048     | 6.894       | 6.318          | 8.693           | 104.544        |
 
 *2.5.2. List*
+
 | Nr. | Nuskaitymas | Skaičiavimas | Rikiavimas | Padalinimas | Išvedimas (<5) | Išvedimas (>=5) | Bendras laikas |
 | --- | ----------- | ------------ | ---------- | ----------- | -------------- | --------------- | -------------- |
 | 1   | 22.161      | 6.238        | 15.856     | 7.497       | 6.852          | 8.999           | 67.603         |
@@ -91,9 +154,21 @@ SSD: NVMe INTEL SSDPEKNW512G8
 | 3   | 22.748      | 6.158        | 15.657     | 8.087       | 6.744          | 21.868          | 81.262         |
 
 *2.5.3. Palyginimas*
+| Veiksmas           | Vektorius (s) | List (s)    | Greitesnis |
+| ------------------ | ------------- | ----------- | ---------- |
+| Nuskaitymas        | 24.1523       | 23.0270     | List       |
+| Skaičiavimas       | 5.2513        | 6.4403      | Vektorius  |
+| Rikiavimas         | 47.4963       | 15.8527     | List       |
+| Padalinimas        | 6.8240        | 7.8020      | Vektorius  |
+| Išvedimas (<5)     | 8.9693        | 7.2027      | List       |
+| Išvedimas (≥5)     | 14.2317       | 15.5613     | Vektorius  |
+| **Bendras laikas** | **107.2583**  | **75.8860** | **List**   |
+
+Apdorojant 10 000 000 įrašų, pastebėta, kad "list" struktūra yra apie 29 % greitesnė už "vector" (75.89 s ir 107.26 s). Didėjant duomenų kiekiui vis labiau matomas skirtumas tarp "list" ir "vector" veikimo laikų, nes "list" rikiuoja duomenis kelis kartus greičiau nei tai daro "vector".
 
 
-**3. Nuotraukos**
+## **3. Nuotraukos**
+
 - Įkeltos pirmo bandymo nuotraukos. Kitų bandymų rezultatai pateikiami lentelėse.
 
 ***Vector su 1 000 įrašų:***
