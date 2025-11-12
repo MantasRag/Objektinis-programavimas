@@ -124,3 +124,42 @@ inline void padalinti_i_grupes_strategija2<std::vector<Studentas>>(
     std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
 }
 
+// LIST
+template <>
+inline void padalinti_i_grupes_strategija2<std::list<Studentas>>(
+    std::list<Studentas>& Grupe,
+    int tipas,
+    std::list<Studentas>& maziau5,
+    std::list<Studentas>& daugiaulygu5) 
+{
+    if (Grupe.empty()) {
+        std::cout << "Klaida. Studentų vektorius tuščias.\n";
+        return;
+    }
+
+    maziau5.clear();
+    daugiaulygu5.clear();
+
+    for (auto it = Grupe.begin(); it != Grupe.end(); ) {
+        float rezultatas = (tipas == 1 ? it->rez_vid : it->rez_med);
+        
+        if (rezultatas < 5.0f) {
+            maziau5.push_back(*it);
+            it = Grupe.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    
+    daugiaulygu5 = Grupe;
+    
+    std::cout << "\n[STRATEGIJA 2] Studentai suskirstyti i grupes pagal " 
+              << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
+    std::cout << "Studentu su < 5: " << maziau5.size() << std::endl;
+    std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
+}
+
+// Bendras template paskelbimas strategijai 2
+template <typename Container>
+void padalinti_i_grupes_strategija2(Container& Grupe, int tipas,
+                        Container& maziau5, Container& daugiaulygu5);
