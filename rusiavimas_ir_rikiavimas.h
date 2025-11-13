@@ -5,6 +5,8 @@
 #include <iostream>
 #include "studentas.h"
 
+using namespace std; // ⚠️ DĖMESIO: nenaudok header failuose didesniuose projektuose
+
 void rikiavimo_budas(int &tipas, int &tvarka);
 int dalijimo_budas();
 int pasirinkti_strategija(); // Funkcija strategijos pasirinkimui
@@ -13,7 +15,7 @@ int pasirinkti_strategija(); // Funkcija strategijos pasirinkimui
 template <typename Container>
 void rusiuoti_studentus(Container& Grupe, int skaiciavimo_metodas, int tipas, int tvarka) {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentu vektorius tuscias.\n";
+        cout << "Klaida. Studentu vektorius tuscias.\n";
         return;
     }
     if (skaiciavimo_metodas == 1 || (skaiciavimo_metodas == 3 && tipas == 1)) {
@@ -31,25 +33,25 @@ void rusiuoti_studentus(Container& Grupe, int skaiciavimo_metodas, int tipas, in
 
 // Specializacija vektoriui
 template <>
-inline void rusiuoti_studentus<std::vector<Studentas>>(std::vector<Studentas>& Grupe, 
-                                                        int skaiciavimo_metodas, int tipas, int tvarka) {
+inline void rusiuoti_studentus<vector<Studentas>>(vector<Studentas>& Grupe, 
+                                                  int skaiciavimo_metodas, int tipas, int tvarka) {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentu vektorius tuscias.\n";
+        cout << "Klaida. Studentu vektorius tuscias.\n";
         return;
     }
     if (skaiciavimo_metodas == 1 || (skaiciavimo_metodas == 3 && tipas == 1)) {
         if (tvarka == 1)
-            std::sort(Grupe.begin(), Grupe.end(),
+            sort(Grupe.begin(), Grupe.end(),
                  [](const Studentas& a, const Studentas& b) { return a.rez_vid < b.rez_vid; });
         else
-            std::sort(Grupe.begin(), Grupe.end(),
+            sort(Grupe.begin(), Grupe.end(),
                  [](const Studentas& a, const Studentas& b) { return a.rez_vid > b.rez_vid; });
     } else {
         if (tvarka == 1)
-            std::sort(Grupe.begin(), Grupe.end(),
+            sort(Grupe.begin(), Grupe.end(),
                  [](const Studentas& a, const Studentas& b) { return a.rez_med < b.rez_med; });
         else
-            std::sort(Grupe.begin(), Grupe.end(),
+            sort(Grupe.begin(), Grupe.end(),
                  [](const Studentas& a, const Studentas& b) { return a.rez_med > b.rez_med; });
     }
 }
@@ -57,9 +59,9 @@ inline void rusiuoti_studentus<std::vector<Studentas>>(std::vector<Studentas>& G
 // 1 STRATEGIJA - COPY+PASTE į du skirtingus failus
 template <typename Container>
 void padalinti_i_grupes_strategija1(const Container& Grupe, int tipas,
-                        Container& maziau5, Container& daugiaulygu5) {
+                                    Container& maziau5, Container& daugiaulygu5) {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentų vektorius tuščias.\n";
+        cout << "Klaida. Studentų vektorius tuščias.\n";
         return;
     }
 
@@ -74,27 +76,27 @@ void padalinti_i_grupes_strategija1(const Container& Grupe, int tipas,
             daugiaulygu5.push_back(st);
     }
     
-    std::cout << "\n[STRATEGIJA 1] Studentai suskirstyti i grupes pagal " 
+    cout << "\n[STRATEGIJA 1] Studentai suskirstyti i grupes pagal " 
          << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
-    std::cout << "Studentu su < 5: " << maziau5.size() << std::endl;
-    std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
+    cout << "Studentu su < 5: " << maziau5.size() << endl;
+    cout << "Studentu su >= 5: " << daugiaulygu5.size() << endl;
 }
 
 // 2 STRATEGIJA - Studentai iškerpami iš pradinio konteinerio ir perkeliami į naują
 template <typename Container>
 void padalinti_i_grupes_strategija2(Container& Grupe, int tipas,
-                        Container& maziau5, Container& daugiaulygu5);
+                                    Container& maziau5, Container& daugiaulygu5);
 
 // Vektoriams
 template <>
-inline void padalinti_i_grupes_strategija2<std::vector<Studentas>>(
-    std::vector<Studentas>& Grupe,
+inline void padalinti_i_grupes_strategija2<vector<Studentas>>(
+    vector<Studentas>& Grupe,
     int tipas,
-    std::vector<Studentas>& maziau5,
-    std::vector<Studentas>& daugiaulygu5) 
+    vector<Studentas>& maziau5,
+    vector<Studentas>& daugiaulygu5) 
 {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentų vektorius tuščias.\n";
+        cout << "Klaida. Studentų vektorius tuščias.\n";
         return;
     }
 
@@ -114,22 +116,22 @@ inline void padalinti_i_grupes_strategija2<std::vector<Studentas>>(
     
     daugiaulygu5 = Grupe;
     
-    std::cout << "\n[STRATEGIJA 2] Studentai suskirstyti i grupes pagal " 
-              << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
-    std::cout << "Studentu su < 5: " << maziau5.size() << std::endl;
-    std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
+    cout << "\n[STRATEGIJA 2] Studentai suskirstyti i grupes pagal " 
+         << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
+    cout << "Studentu su < 5: " << maziau5.size() << endl;
+    cout << "Studentu su >= 5: " << daugiaulygu5.size() << endl;
 }
 
 // List'ams
 template <>
-inline void padalinti_i_grupes_strategija2<std::list<Studentas>>(
-    std::list<Studentas>& Grupe,
+inline void padalinti_i_grupes_strategija2<list<Studentas>>(
+    list<Studentas>& Grupe,
     int tipas,
-    std::list<Studentas>& maziau5,
-    std::list<Studentas>& daugiaulygu5) 
+    list<Studentas>& maziau5,
+    list<Studentas>& daugiaulygu5) 
 {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentų vektorius tuščias.\n";
+        cout << "Klaida. Studentų vektorius tuščias.\n";
         return;
     }
 
@@ -149,10 +151,10 @@ inline void padalinti_i_grupes_strategija2<std::list<Studentas>>(
     
     daugiaulygu5 = Grupe;
     
-    std::cout << "\n[STRATEGIJA 2] Studentai suskirstyti i grupes pagal " 
-              << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
-    std::cout << "Studentu su < 5: " << maziau5.size() << std::endl;
-    std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
+    cout << "\n[STRATEGIJA 2] Studentai suskirstyti i grupes pagal " 
+         << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
+    cout << "Studentu su < 5: " << maziau5.size() << endl;
+    cout << "Studentu su >= 5: " << daugiaulygu5.size() << endl;
 }
 
 // 3 STRATEGIJA
@@ -160,25 +162,25 @@ inline void padalinti_i_grupes_strategija2<std::list<Studentas>>(
 // List'ui naudojama patobulinta antra strategija
 template <typename Container>
 void padalinti_i_grupes_strategija3(Container& Grupe, int tipas,
-                        Container& maziau5, Container& daugiaulygu5);
+                                    Container& maziau5, Container& daugiaulygu5);
 
 // Vektoriams
 template <>
-inline void padalinti_i_grupes_strategija3<std::vector<Studentas>>(
-    std::vector<Studentas>& Grupe,
+inline void padalinti_i_grupes_strategija3<vector<Studentas>>(
+    vector<Studentas>& Grupe,
     int tipas,
-    std::vector<Studentas>& maziau5,
-    std::vector<Studentas>& daugiaulygu5) 
+    vector<Studentas>& maziau5,
+    vector<Studentas>& daugiaulygu5) 
 {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentų vektorius tuščias.\n";
+        cout << "Klaida. Studentų vektorius tuščias.\n";
         return;
     }
 
     maziau5.clear();
     daugiaulygu5.clear();
 
-    auto riba = std::stable_partition(Grupe.begin(), Grupe.end(),
+    auto riba = stable_partition(Grupe.begin(), Grupe.end(),
         [tipas](const Studentas& st) { 
             float rezultatas = (tipas == 1 ? st.rez_vid : st.rez_med);
             return rezultatas < 5.0f;
@@ -187,22 +189,22 @@ inline void padalinti_i_grupes_strategija3<std::vector<Studentas>>(
     maziau5.assign(Grupe.begin(), riba);
     daugiaulygu5.assign(riba, Grupe.end());
     
-    std::cout << "\n[STRATEGIJA 3] Studentai suskirstyti i grupes pagal " 
-              << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
-    std::cout << "Studentu su < 5: " << maziau5.size() << std::endl;
-    std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
+    cout << "\n[STRATEGIJA 3] Studentai suskirstyti i grupes pagal " 
+         << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
+    cout << "Studentu su < 5: " << maziau5.size() << endl;
+    cout << "Studentu su >= 5: " << daugiaulygu5.size() << endl;
 }
 
-// List'ams
+// List'ams su std:list::splice
 template <>
-inline void padalinti_i_grupes_strategija3<std::list<Studentas>>(
-    std::list<Studentas>& Grupe,
+inline void padalinti_i_grupes_strategija3<list<Studentas>>(
+    list<Studentas>& Grupe,
     int tipas,
-    std::list<Studentas>& maziau5,
-    std::list<Studentas>& daugiaulygu5) 
+    list<Studentas>& maziau5,
+    list<Studentas>& daugiaulygu5) 
 {
     if (Grupe.empty()) {
-        std::cout << "Klaida. Studentų sąrašas tuščias.\n";
+        cout << "Klaida. Studentu sarasas tuscias.\n";
         return;
     }
 
@@ -212,18 +214,19 @@ inline void padalinti_i_grupes_strategija3<std::list<Studentas>>(
     auto it = Grupe.begin();
     while (it != Grupe.end()) {
         float rezultatas = (tipas == 1 ? it->rez_vid : it->rez_med);
+        
         if (rezultatas < 5.0f) {
-            maziau5.push_back(*it);
-            it = Grupe.erase(it);
+            auto current = it++;
+            maziau5.splice(maziau5.end(), Grupe, current);
         } else {
             ++it;
         }
     }
     
-    daugiaulygu5 = Grupe;
+    daugiaulygu5.splice(daugiaulygu5.end(), Grupe);
     
-    std::cout << "\n[STRATEGIJA 3] Studentai suskirstyti i grupes pagal " 
-              << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
-    std::cout << "Studentu su < 5: " << maziau5.size() << std::endl;
-    std::cout << "Studentu su >= 5: " << daugiaulygu5.size() << std::endl;
+    cout << "\n[STRATEGIJA 3] Studentai suskirstyti i grupes pagal " 
+         << (tipas == 1 ? "vidurkis" : "mediana") << "):\n";
+    cout << "Studentu su < 5: " << maziau5.size() << endl;
+    cout << "Studentu su >= 5: " << daugiaulygu5.size() << endl;
 }
